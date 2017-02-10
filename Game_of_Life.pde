@@ -1,4 +1,4 @@
-class Block {
+class Block { //<>//
   final int blockSize = 50;
   int x; 
   int y;
@@ -17,6 +17,10 @@ class Block {
     }
     rect(x*blockSize, y*blockSize, blockSize, blockSize);
   }
+  boolean isAlive () {
+    return alive;
+  }
+
   void setAlive(boolean alive) {
     this.alive = alive;
   }
@@ -32,8 +36,6 @@ class Block {
 
 
 
-
-
 Block[][] Grid = new Block[100][100];
 
 void setup() {
@@ -43,33 +45,54 @@ void setup() {
       Grid[i][j] = new Block(i, j);
       int x = (int)random(2);
       if (x == 0) {
-        //Grid[i][j].setAlive(true);
+        Grid[i][j].setAlive(true);
       }
     }
   }
 }
 void draw() {
+
+ArrayList<Block> alive = new ArrayList<Block>();
+ArrayList<Block> dead = new ArrayList<Block>();
+
   for (int row = 0; row< Grid.length; row++) {
     for (int col = 0; col< Grid.length; col++) {
       Grid[row][col].display();
+      if (getAliveCounter(getNeighbors(Grid[row][col])) == 3) {
+        Grid[row][col].setAlive(true);
+      } else {
+        Grid[row][col].setAlive(false);
+      }
     }
-  }
-  Block[] neighbors = getNeighbors(Grid[4][4]);
-  for(Block b: neighbors){
-    b.display();
   }
 }
 
 Block[] getNeighbors(Block a) {
-  Block[] neighbors = new Block[10];
+  Block[] neighbors = new Block[8];
   int x = a.getX();
   int y = a.getY();
   int index = 0;
-  for (int i = x-1; i<x+1; i++) {
-    for (int j = y-1; j<y+1; j++) {
-       neighbors[index] = Grid[i][j];
-       index++;
+  if (!(x - 1 < 0 || y - 1 < 0 || x + 1 > Grid.length -1 || y + 1 > Grid.length -1)) {
+    for (int i = x-1; i<=x+1; i++) {
+      for (int j = y-1; j<=y+1; j++) {
+        if (!(x == i && y == j)) {
+          neighbors[index] = Grid[i][j];
+          index++;
+        }
+      }
     }
   }
   return neighbors;
+}
+
+int getAliveCounter(Block[] a) {
+  int aliveCounter = 0;
+  for (Block b : a) {
+    if (b!=null) {
+      if (b.isAlive() == true) {
+        aliveCounter++;
+      }
+    }
+  }
+  return aliveCounter;
 }
