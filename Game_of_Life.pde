@@ -37,6 +37,8 @@ class Block { //<>//
 
 
 Block[][] Grid = new Block[100][100];
+ArrayList<Block> alive = new ArrayList<Block>();
+ArrayList<Block> dead = new ArrayList<Block>();
 
 void setup() {
   size(1000, 1000);
@@ -51,9 +53,6 @@ void setup() {
   }
 }
 void draw() {
-
-ArrayList<Block> alive = new ArrayList<Block>();
-ArrayList<Block> dead = new ArrayList<Block>();
 
   for (int row = 0; row< Grid.length; row++) {
     for (int col = 0; col< Grid.length; col++) {
