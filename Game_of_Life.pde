@@ -1,5 +1,5 @@
 class Block { //<>//
-  final int blockSize = 50;
+  final int blockSize = 10;
   int x; 
   int y;
   boolean alive;
@@ -42,6 +42,7 @@ ArrayList<Block> dead = new ArrayList<Block>();
 
 void setup() {
   size(1000, 1000);
+  frameRate(10);
   for (int i = 0; i<Grid.length; i++) {
     for (int j = 0; j<Grid.length; j++) {
       Grid[i][j] = new Block(i, j);
@@ -56,14 +57,16 @@ void draw() {
 
   for (int row = 0; row< Grid.length; row++) {
     for (int col = 0; col< Grid.length; col++) {
-      Grid[row][col].display();
+      Grid[row][col].display(); 
       if (getAliveCounter(getNeighbors(Grid[row][col])) == 3) {
-        Grid[row][col].setAlive(true);
-      } else {
-        Grid[row][col].setAlive(false);
+        alive.add(Grid[row][col]);
+      } 
+      if (getAliveCounter(getNeighbors(Grid[row][col])) > 3 || getAliveCounter(getNeighbors(Grid[row][col])) < 2) {
+        dead.add(Grid[row][col]);
       }
     }
   }
+  killAll();
 }
 
 Block[] getNeighbors(Block a) {
@@ -94,4 +97,15 @@ int getAliveCounter(Block[] a) {
     }
   }
   return aliveCounter;
+}
+
+void killAll() {
+  for (Block b : dead) {
+    b.setAlive(false);
+  }
+  for (Block b : alive) {
+    b.setAlive(true);
+  }
+  dead.clear();
+  alive.clear();
 }
